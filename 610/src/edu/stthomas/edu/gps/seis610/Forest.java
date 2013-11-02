@@ -85,37 +85,6 @@ public class Forest {
 				}
 			} else {
 				//end
-				
-				
-//				if(countLevel == targetLevel-2){
-//					//always end with two operands
-//					root.setLeftChild( new BinaryTree(Randomizer.randomOperand()));
-//					root.getLeftChild().setLevel(countLevel);
-//					root.setRightChild( new BinaryTree(Randomizer.randomOperand()));
-//					root.getRightChild().setLevel(countLevel);
-//					buildTree(root.getLeftChild(), targetLevel, countLevel +1);
-//					buildTree(root.getRightChild(), targetLevel, countLevel +1);
-//				} else {
-//					int lfb = Randomizer.randomLeftRightBoth();
-//					
-//					if(lfb == 0){
-//						root.setLeftChild(new BinaryTree(Randomizer.randomOperatorOrOperand()));
-//						root.getLeftChild().setLevel(countLevel);
-//						buildTree(root.getLeftChild(), targetLevel, countLevel+1);
-//					} else if(lfb == 1){
-//						root.setRightChild( new BinaryTree(Randomizer.randomOperatorOrOperand()));
-//						root.getRightChild().setLevel(countLevel);
-//						buildTree(root.getRightChild(), targetLevel, countLevel+1);
-//					} else {
-//						root.setLeftChild( new BinaryTree(Randomizer.randomOperatorOrOperand()));
-//						root.getLeftChild().setLevel(countLevel);
-//						root.setRightChild( new BinaryTree(Randomizer.randomOperatorOrOperand()));
-//						root.getRightChild().setLevel(countLevel);
-//						buildTree(root.getLeftChild(), targetLevel, countLevel +1);
-//						buildTree(root.getRightChild(), targetLevel, countLevel +1);
-//					}
-//				}
-				
 			}
 
 	} else {
