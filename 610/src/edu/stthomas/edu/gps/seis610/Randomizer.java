@@ -2,11 +2,6 @@ package edu.stthomas.edu.gps.seis610;
 
 public class Randomizer {
 	
-	public static Integer randomLeftRightBoth(){
-		//0 = left, 1 = right, 2 = both
-		return randomGen(0,2);
-	}
-	
 	public static String randomOperatorOrOperand(){
 		int option = randomGen(0,1);
 		String result;

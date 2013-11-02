@@ -78,7 +78,7 @@ public class GP {
 	}
 	
 	/**
-	 * Takes an array of training data x values, and returns the sum of the caluclated y values
+	 * Takes an array of training data x values or a tree and returns the sum of the calculated y values
 	 * 
 	 * @param equation
 	 * @param trainingData
@@ -98,7 +98,7 @@ public class GP {
 			for(int j=0; j< trainingData.length; j++){
 //				System.out.println(trainingData[j]);
 				calc.setVariable("x",trainingData[j]);
-			    System.out.println(calc.calculate());
+//			    System.out.println(calc.calculate());
 			    valuesSum += calc.calculate();
 			}
 			
