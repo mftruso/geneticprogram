@@ -4,16 +4,16 @@ package edu.stthomas.edu.gps.seis610;
 public class Settings {
 	private static int maxTreeHeight;
 	private static int populationSize;
-	private static int treesToCrossover;
-	private static int treesToMutate;
+	private static double treesToCrossover;
+	private static double treesToMutate;
 	private static double percentageOfTreesToSurvive;
 	private static String stringEquation;
 
 	public Settings(){
-		maxTreeHeight = 5;
-		populationSize = 2;
-		treesToCrossover = 2;
-		treesToMutate = 1;
+		maxTreeHeight = 15;
+		populationSize = 50;
+		treesToCrossover = 0.2;
+		treesToMutate = 0.1;
 		setPercentageOfTreesToSurvive(0.8);
 		setStringEquation("(((x*x)-1)/2)");
 	}
@@ -34,19 +34,19 @@ public class Settings {
 		this.populationSize = populationSize;
 	}
 
-	public int getTreesToCrossover() {
+	public double getTreesToCrossover() {
 		return treesToCrossover;
 	}
 
-	public void setTreesToCrossover(int treesToCrossover) {
+	public void setTreesToCrossover(double treesToCrossover) {
 		this.treesToCrossover = treesToCrossover;
 	}
 
-	public int getTreesToMutate() {
+	public double getTreesToMutate() {
 		return treesToMutate;
 	}
 
-	public void setTreesToMutate(int treesToMutate) {
+	public void setTreesToMutate(double treesToMutate) {
 		this.treesToMutate = treesToMutate;
 	}
 

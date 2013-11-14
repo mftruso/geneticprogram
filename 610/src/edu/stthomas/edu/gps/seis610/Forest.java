@@ -22,26 +22,27 @@ public class Forest {
 	}
 	
 	public void initialize(Settings settings){
-		List<BinaryTree> treelist = new ArrayList<BinaryTree>();
+//		List<BinaryTree> treelist = new ArrayList<BinaryTree>();
 		int treeDepth;
 		
 		//create the tree list
-		for(int i = 0; i < settings.getPopulationSize(); i++){
-			//build out each tree
-			//initialize newtree
+		for(int i = getTrees().size(); i < settings.getPopulationSize(); i++){
+
 			BinaryTree newtree = new BinaryTree(Randomizer.randomOperator());
 			newtree.setLevel(0);
+			
 			//random select tree depth
 			treeDepth = Randomizer.randomGen(2, settings.getMaxTreeHeight());
-			System.out.println("Creating tree with depth of: " + treeDepth);
+//			System.out.println("Creating tree with depth of: " + treeDepth);
 			newtree.setMaxDepth(treeDepth);
+			
 			buildTree(newtree, treeDepth, 0);
+			
 //			System.out.println("tree creation finished");
 			System.out.println( newtree.toString() );
 //			newtree.print();
-			treelist.add(newtree);
+			getTrees().add(newtree);
 		}
-		setTrees(treelist);
 	}
 	
 

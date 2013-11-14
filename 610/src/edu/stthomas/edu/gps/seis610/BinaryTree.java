@@ -10,7 +10,7 @@ package edu.stthomas.edu.gps.seis610;
  * @author David Matuszek
  * @version Jan 25, 2004
  */
-public class BinaryTree {
+public class BinaryTree implements Comparable<BinaryTree> {
     /**
      * The value (data) in this node of the binary tree; may be of
      * any object type.
@@ -25,6 +25,7 @@ public class BinaryTree {
     private boolean match;
     private boolean operator;
     private boolean valid;
+    private double delta;
 
     public boolean isMutate() {
 		return mutate;
@@ -119,10 +120,10 @@ public class BinaryTree {
      *         a loop in the binary tree.
      */
     public void setLeftChild(BinaryTree subtree) throws IllegalArgumentException {
-        if (contains(subtree, this)) {
-            throw new IllegalArgumentException(
-                "Subtree " + this +" already contains " + subtree);
-        }
+//        if (contains(subtree, this)) {
+//            throw new IllegalArgumentException(
+//                "Subtree " + this +" already contains " + subtree);
+//        }
         leftChild = subtree;
     }
 
@@ -137,10 +138,10 @@ public class BinaryTree {
      *         a loop in the binary tree.
      */
     public void setRightChild(BinaryTree subtree) throws IllegalArgumentException {
-        if (contains(subtree, this)) {
-            throw new IllegalArgumentException(
-                    "Subtree " + this +" already contains " + subtree);
-        }
+//        if (contains(subtree, this)) {
+//            throw new IllegalArgumentException(
+//                    "Subtree " + this +" already contains " + subtree);
+//        }
         rightChild = subtree;
     }
 
@@ -327,5 +328,30 @@ public class BinaryTree {
         		findCrossoverNode(tree.getRightChild(), treepart);
         }
       }
+    
+    /**
+     * Delta value is the sum of the training values subtracted by the sum of this tree's values
+     * @return
+     */
+	public double getDelta() {
+		return delta;
+	}
+
+	public void setDelta(double delta) {
+		this.delta = delta;
+	}
+
+	@Override
+	public int compareTo(BinaryTree tree1) {
+		if(tree1.getDelta() < getDelta()){
+			return -1;
+		} else if(tree1.getDelta() == getDelta()){
+			return 0;
+		} else {
+			return 1;
+		}
+	}
+	
+
  
 }
