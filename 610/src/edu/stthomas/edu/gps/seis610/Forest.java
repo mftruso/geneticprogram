@@ -34,6 +34,7 @@ public class Forest {
 			//random select tree depth
 			treeDepth = Randomizer.randomGen(2, settings.getMaxTreeHeight());
 			System.out.println("Creating tree with depth of: " + treeDepth);
+			newtree.setMaxDepth(treeDepth);
 			buildTree(newtree, treeDepth, 0);
 //			System.out.println("tree creation finished");
 			System.out.println( newtree.toString() );

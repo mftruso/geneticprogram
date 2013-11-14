@@ -21,6 +21,7 @@ public class BinaryTree {
     private boolean mutate;
     private boolean crossover;
     private int level;
+    private int maxDepth;
     private boolean match;
     private boolean operator;
     private boolean valid;
@@ -47,6 +48,14 @@ public class BinaryTree {
 
 	public void setLevel(int level) {
 		this.level = level;
+	}
+
+	public int getMaxDepth() {
+		return maxDepth;
+	}
+
+	public void setMaxDepth(int maxDepth) {
+		this.maxDepth = maxDepth;
 	}
 
 	/**
@@ -205,6 +214,9 @@ public class BinaryTree {
             || contains(targetNode, tree.getRightChild());
     }
     
+    
+    
+    
     /**
      * Returns a String representation of this BinaryTree.
      * 
@@ -301,6 +313,19 @@ public class BinaryTree {
 	public void setValid(boolean valid) {
 		this.valid = valid;
 	}
-    
-    
+	
+    public static void findCrossoverNode(BinaryTree tree, BinaryTree treepart) {
+        System.out.println("Finding crossovernode TreeNode: " + tree.getValue());
+
+		if (tree.isCrossover()) {
+			treepart = tree;
+		} else {
+			if (tree.getLeftChild() != null) {
+				findCrossoverNode(tree.getLeftChild(), treepart);
+			}
+        	if(tree.getRightChild() != null)
+        		findCrossoverNode(tree.getRightChild(), treepart);
+        }
+      }
+ 
 }

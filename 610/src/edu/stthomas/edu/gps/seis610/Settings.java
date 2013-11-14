@@ -11,7 +11,7 @@ public class Settings {
 
 	public Settings(){
 		maxTreeHeight = 5;
-		populationSize = 100;
+		populationSize = 2;
 		treesToCrossover = 2;
 		treesToMutate = 1;
 		setPercentageOfTreesToSurvive(0.8);
