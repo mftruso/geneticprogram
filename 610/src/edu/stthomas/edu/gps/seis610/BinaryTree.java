@@ -120,10 +120,10 @@ public class BinaryTree implements Comparable<BinaryTree> {
      *         a loop in the binary tree.
      */
     public void setLeftChild(BinaryTree subtree) throws IllegalArgumentException {
-//        if (contains(subtree, this)) {
-//            throw new IllegalArgumentException(
-//                "Subtree " + this +" already contains " + subtree);
-//        }
+        if (contains(subtree, this)) {
+            throw new IllegalArgumentException(
+                "Subtree " + this +" already contains " + subtree);
+        }
         leftChild = subtree;
     }
 
@@ -138,10 +138,10 @@ public class BinaryTree implements Comparable<BinaryTree> {
      *         a loop in the binary tree.
      */
     public void setRightChild(BinaryTree subtree) throws IllegalArgumentException {
-//        if (contains(subtree, this)) {
-//            throw new IllegalArgumentException(
-//                    "Subtree " + this +" already contains " + subtree);
-//        }
+        if (contains(subtree, this)) {
+            throw new IllegalArgumentException(
+                    "Subtree " + this +" already contains " + subtree);
+        }
         rightChild = subtree;
     }
 

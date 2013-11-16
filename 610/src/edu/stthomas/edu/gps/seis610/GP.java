@@ -8,20 +8,22 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 import de.congrace.exp4j.*;
 
 public class GP {
-
+	private static Logger log = Logger.getLogger("InfoLogger");
+	  
 	public static void main(String[] args) {
 		Settings settings = new Settings();
 		boolean searchingForProgram = true;
 		Forest forest = new Forest();
-		
-		System.out.println("Program started!");
+		int generation = 1;
+		log.info("Program started!");
 
 		// readin Training Data from file
-		System.out.println("Reading Training Data");
+		log.info("Reading Training Data");
 		int trainingData[] = new int[9];
 		String inputString;
 		int i = 0;
@@ -44,15 +46,16 @@ public class GP {
 		}
 
 		double trainingDataYValueSum = Math.abs(calculateValues(null,
-				trainingData, settings.getStringEquation()));
+				trainingData, Settings.getStringEquation()));
 
 		
 		// iterate through generations
 		while(searchingForProgram){
-			 forest.initialize(settings);
+//		while(generation < 3){
+			System.out.println("Beginning Generation: " + generation); 
+			forest.initialize(settings);
 //			 System.out.println("Forest size: " + forest.getTrees().size());
-			 forest = iterateGenerations(forest, trainingData, trainingDataYValueSum,
-					settings);
+			 forest = iterateGenerations(forest, trainingData, trainingDataYValueSum);
 			
 			for(BinaryTree bt : forest.getTrees()){
 				if(bt.isValid()){
@@ -63,6 +66,7 @@ public class GP {
 					
 				}
 			}
+			generation++;
 		 }
 		 
 		 System.out.println("End");
@@ -70,7 +74,7 @@ public class GP {
 	}
 
 	/**
-	 * The recursive method for creating new generations
+	 * The  method for creating new generations
 	 * 
 	 * @param currentForest
 	 * @param trainingData
@@ -79,19 +83,18 @@ public class GP {
 	 * @return
 	 */
 	public static Forest iterateGenerations(Forest currentForest,
-			int[] trainingData, double trainingDataYValueSum, Settings settings) {
+			int[] trainingData, double trainingDataYValueSum) {
 		
 		
 		double delta;
 		double treeSum;
-		int populationSize = settings.getPopulationSize();
-		double treesToKill = Math.ceil(populationSize * (1-settings.getPercentageOfTreesToSurvive()));
-		double treesToCrossover = Math.ceil(populationSize) * (settings.getTreesToCrossover());
-		double treesToMutate = Math.ceil(populationSize) * (settings.getTreesToMutate());
+		int populationSize = Settings.getPopulationSize();
+		double treesToKill = Math.ceil(populationSize * (1-Settings.getPercentageOfTreesToSurvive()));
+		double treesToCrossover = Math.ceil(populationSize) * (Settings.getTreesToCrossover());
+		double treesToMutate = Math.ceil(populationSize) * (Settings.getTreesToMutate());
 		int[] crossoverTrees = new int[(int) treesToCrossover];
 		int randomTreeIndex;
 		int[] mutateTrees = new int[(int) treesToMutate];
-		int randomMutateIndex;
 		
 		
 		//number of trees to crossover should always be even
@@ -113,9 +116,14 @@ public class GP {
 			}
 
 		}
-	
+//		System.out.println("Tree before/after sort");
+//		for(BinaryTree bt : currentForest.getTrees())
+//			System.out.println(bt.toString());
 		//sort trees from largest delta value to smallest delta
 		Collections.sort(currentForest.getTrees());
+//		System.out.println("");
+//		for(BinaryTree bt : currentForest.getTrees())
+//			System.out.println(bt.toString());
 		
 		//remove treesfrom the bottom of the list
 		for(int i = 0; i < treesToKill; i++ ){
@@ -219,6 +227,8 @@ public class GP {
 
 		return valuesSum;
 	}
+	
+	
 	/**
 	 * Takes two BinaryTree and swaps a portion of each tree 
 	 * 
@@ -227,8 +237,8 @@ public class GP {
 	 */
 	public static void crossover(BinaryTree tree1, BinaryTree tree2) {
 
-		int randDepth1 = Randomizer.randomGen(1, tree1.getMaxDepth()-1);
-		int randDepth2 = Randomizer.randomGen(1, tree2.getMaxDepth()-1);
+		int randDepth1;
+		int randDepth2;
 		List<BinaryTree> tree1Nodes = new ArrayList<BinaryTree>();
 		List<BinaryTree> tree2Nodes = new ArrayList<BinaryTree>();
 		
@@ -238,46 +248,63 @@ public class GP {
 		tree2Nodes = createTreeArrayList(tree2, tree2Nodes);
 //		System.out.println("tree1Nodes size: " + tree2Nodes.size());
 		
+		randDepth1 = Randomizer.randomGen(1, tree1Nodes.size()-1);
+		randDepth2 = Randomizer.randomGen(1, tree2Nodes.size()-1);
+		
+		
 		//Randomly determine a tree node to be crossedover
 		BinaryTree tree1CrossoverPart = tree1Nodes.get(randDepth1);
 		tree1CrossoverPart.setCrossover(true);
 		BinaryTree tree2CrossoverPart = tree2Nodes.get(randDepth2);
 		tree2CrossoverPart.setCrossover(true);
-//		System.out.println("Crossover tree part 1");
-//		System.out.println(tree1CrossoverPart.toString());
-//		System.out.println("Crossover tree part 2");
-//		System.out.println(tree2CrossoverPart.toString());
+		System.out.println("Crossover tree part 1");
+		System.out.println(tree1CrossoverPart.toString());
+		System.out.println("Crossover tree part 2");
+		System.out.println(tree2CrossoverPart.toString());
 
-//		System.out.println("Trees before crossover: ");
-//		System.out.println(tree1.toString());
-//		System.out.println(tree2.toString());
+		System.out.println("Trees before crossover: ");
+		System.out.println(tree1.toString());
+		System.out.println(tree2.toString());
 
 		doCrossover(tree1, tree2CrossoverPart);
 		doCrossover(tree2, tree1CrossoverPart);
 
-//		System.out.println("Trees after crossover: ");
-//		System.out.println(tree1.toString());
-//		System.out.println(tree2.toString());
+		System.out.println("Trees after crossover: ");
+		System.out.println(tree1.toString());
+		System.out.println(tree2.toString());
 	}
 	
+	/**
+	 * Mutate one value in a tree
+	 * 
+	 * @param tree
+	 */
 	private static void mutate(BinaryTree tree){
-		int randDepth = Randomizer.randomGen(0, tree.getMaxDepth()-1);
+		int randDepth;
 		String newValue = "";
 		List<BinaryTree> treeNodes = new ArrayList<BinaryTree>();
-		treeNodes = createTreeArrayList(tree, treeNodes);
 		
+		treeNodes = createTreeArrayList(tree, treeNodes);
+		randDepth = Randomizer.randomGen(0, treeNodes.size()-1);
 //		System.out.println("Value to mutate: " + treeNodes.get(randDepth).getValue());
 		if(treeNodes.get(randDepth).isOperator()){
 			newValue = Randomizer.randomOperator();
 		} else {
 			newValue = Randomizer.randomOperand();
 		}
-//		System.out.println("Tree before/after mutation");
-//		System.out.println(tree.toString());
+		System.out.println("Tree before/after mutation");
+		System.out.println(tree.toString());
 		treeNodes.get(randDepth).setValue(newValue);
-//		System.out.println(tree.toString());
+		System.out.println(tree.toString());
 	}
-
+	
+	/**
+	 * Recursive method to build an array list of tree nodes
+	 * 
+	 * @param tree
+	 * @param nodeList
+	 * @return
+	 */
 	private static List<BinaryTree> createTreeArrayList(BinaryTree tree, List<BinaryTree> nodeList) {
 		if(tree != null){
 			nodeList.add(tree);
@@ -286,22 +313,27 @@ public class GP {
 		}
 		return nodeList;
 	}
-
+	
+	/**
+	 * recursively searches a BinaryTree for the node marked for crossover then replaces that node 
+	 * with a different tree
+	 *  
+	 * @param tree
+	 * @param treeCrossoverPart
+	 */
 	public static void doCrossover(BinaryTree tree, BinaryTree treeCrossoverPart) {
 		if (tree != null) {
 			if (tree.getRightChild() != null && tree.getRightChild().isCrossover()) {				
+				tree.getRightChild().setCrossover(false);
 				tree.setRightChild(treeCrossoverPart);
+				System.out.println("Found crossover on right! " + tree.toString());
 			} else if(tree.getLeftChild() != null && tree.getLeftChild().isCrossover()){
+				tree.getLeftChild().setCrossover(false);
 				tree.setLeftChild(treeCrossoverPart);
+				System.out.println("Found crossover on left! " + tree.toString());
 			} else {
-				if(!tree.contains(tree, treeCrossoverPart)){
 					doCrossover(tree.getLeftChild(), treeCrossoverPart);
-				}
-				
-				if(!tree.contains(tree, treeCrossoverPart)){
-					doCrossover(tree.getRightChild(), treeCrossoverPart);
-				}
-				
+					doCrossover(tree.getRightChild(), treeCrossoverPart);				
 			}
 		}
 

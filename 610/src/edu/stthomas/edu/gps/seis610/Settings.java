@@ -11,7 +11,7 @@ public class Settings {
 
 	public Settings(){
 		maxTreeHeight = 15;
-		populationSize = 50;
+		populationSize = 15;
 		treesToCrossover = 0.2;
 		treesToMutate = 0.1;
 		setPercentageOfTreesToSurvive(0.8);
@@ -34,7 +34,7 @@ public class Settings {
 		this.populationSize = populationSize;
 	}
 
-	public double getTreesToCrossover() {
+	public static double getTreesToCrossover() {
 		return treesToCrossover;
 	}
 
@@ -42,7 +42,7 @@ public class Settings {
 		this.treesToCrossover = treesToCrossover;
 	}
 
-	public double getTreesToMutate() {
+	public static double getTreesToMutate() {
 		return treesToMutate;
 	}
 
