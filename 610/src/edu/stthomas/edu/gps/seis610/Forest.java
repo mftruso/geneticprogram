@@ -4,7 +4,11 @@ package edu.stthomas.edu.gps.seis610;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Forest {
+	static Logger log = (Logger) LoggerFactory.getLogger(Forest.class);    	
 	private List<BinaryTree> trees = new ArrayList<BinaryTree>();
 	private int generation;
 	
@@ -22,7 +26,6 @@ public class Forest {
 	}
 	
 	public void initialize(Settings settings){
-//		List<BinaryTree> treelist = new ArrayList<BinaryTree>();
 		int treeDepth;
 		
 		//create the tree list
@@ -33,14 +36,12 @@ public class Forest {
 			
 			//random select tree depth
 			treeDepth = Randomizer.randomGen(2, settings.getMaxTreeHeight());
-//			System.out.println("Creating tree with depth of: " + treeDepth);
+//			log.debug("Creating tree with depth of: " + treeDepth);
 			newtree.setMaxDepth(treeDepth);
 			
 			buildTree(newtree, treeDepth, 0);
 			
-//			System.out.println("tree creation finished");
-			System.out.println( newtree.toString() );
-//			newtree.print();
+			log.debug("created new tree: " + newtree.toString());
 			getTrees().add(newtree);
 		}
 	}
@@ -48,12 +49,18 @@ public class Forest {
 
 	
 	
-	
-	public static void buildTree (BinaryTree root, Integer targetLevel, Integer countLevel){ // Each child of a tree is a root of its subtree.
-//	    System.out.println("traversing tree for level " + targetLevel);
-//	    System.out.println("level count at: " + countLevel);
-//		System.out.println("traversing direction " + direction);
-		if(countLevel < targetLevel-1) {
+	/**
+	 * Recursive method to construct a tree given a random depth
+	 * 
+	 * @param root
+	 * @param targetLevel
+	 * @param countLevel
+	 */
+	public static void buildTree (BinaryTree root, Integer targetLevel, Integer countLevel){ 
+	    log.debug("traversing tree for level " + targetLevel);
+	    log.debug("level count at: " + countLevel);
+
+	    if(countLevel < targetLevel-1) {
 			
 			if(root.isOperator()){
 				if(countLevel == targetLevel-2){

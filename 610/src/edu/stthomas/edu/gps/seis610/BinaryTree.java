@@ -315,19 +315,6 @@ public class BinaryTree implements Comparable<BinaryTree> {
 		this.valid = valid;
 	}
 	
-    public static void findCrossoverNode(BinaryTree tree, BinaryTree treepart) {
-        System.out.println("Finding crossovernode TreeNode: " + tree.getValue());
-
-		if (tree.isCrossover()) {
-			treepart = tree;
-		} else {
-			if (tree.getLeftChild() != null) {
-				findCrossoverNode(tree.getLeftChild(), treepart);
-			}
-        	if(tree.getRightChild() != null)
-        		findCrossoverNode(tree.getRightChild(), treepart);
-        }
-      }
     
     /**
      * Delta value is the sum of the training values subtracted by the sum of this tree's values

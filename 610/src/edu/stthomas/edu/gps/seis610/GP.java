@@ -8,18 +8,21 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import de.congrace.exp4j.*;
 
 public class GP {
-	private static Logger log = Logger.getLogger("InfoLogger");
-	  
+	static Logger log = (Logger) LoggerFactory.getLogger(GP.class);    
+    
 	public static void main(String[] args) {
 		Settings settings = new Settings();
 		boolean searchingForProgram = true;
 		Forest forest = new Forest();
-		int generation = 1;
+
 		log.info("Program started!");
 
 		// readin Training Data from file
@@ -48,28 +51,30 @@ public class GP {
 		double trainingDataYValueSum = Math.abs(calculateValues(null,
 				trainingData, Settings.getStringEquation()));
 
-		
+		forest.setGeneration(1);
 		// iterate through generations
 		while(searchingForProgram){
-//		while(generation < 3){
-			System.out.println("Beginning Generation: " + generation); 
-			forest.initialize(settings);
-//			 System.out.println("Forest size: " + forest.getTrees().size());
-			 forest = iterateGenerations(forest, trainingData, trainingDataYValueSum);
+//		while(forest.getGeneration() < 3){
+			log.info("Beginning Generation: " + forest.getGeneration());
 			
+			forest.initialize(settings);
+			log.debug("Forest size: " + forest.getTrees().size());
+			
+			forest = evaluateForest(forest, trainingData, trainingDataYValueSum);
+			
+			//check forest for valid tree
 			for(BinaryTree bt : forest.getTrees()){
 				if(bt.isValid()){
-					System.out.println("Valid Program!");
-					System.out.println(bt.toString());
+					log.warn("Valid Program!");
+					log.warn(bt.toString());
 					searchingForProgram = false;
-				} else {
-					
 				}
 			}
-			generation++;
+			
+			forest.setGeneration(forest.getGeneration()+1);
 		 }
 		 
-		 System.out.println("End");
+		 log.info("End");
 
 	}
 
@@ -82,7 +87,7 @@ public class GP {
 	 * @param settings
 	 * @return
 	 */
-	public static Forest iterateGenerations(Forest currentForest,
+	public static Forest evaluateForest(Forest currentForest,
 			int[] trainingData, double trainingDataYValueSum) {
 		
 		
@@ -102,34 +107,41 @@ public class GP {
 			treesToCrossover++;
 		}
 		
-		// evaluate trees
+		// evaluate trees against training data
 		for (BinaryTree tree : currentForest.getTrees()) {
+			log.info(tree.toString());
 			treeSum = calculateValues(tree, trainingData, null);
-
+			log.info("Sum: " + treeSum);
 			if (Math.abs(treeSum) == trainingDataYValueSum) {
 				tree.setValid(true);
-				System.out.println("Valid tree! " + tree.toString());
+				log.warn("Valid tree! " + tree.toString());
 				break;
 			} else {
 				delta = Math.abs(trainingDataYValueSum - treeSum);
 				tree.setDelta(delta);
+				log.info("Delta: " + delta);
 			}
 
 		}
-//		System.out.println("Tree before/after sort");
+		
+//		log.debug("Tree before/after sort");
 //		for(BinaryTree bt : currentForest.getTrees())
-//			System.out.println(bt.toString());
+//			log.debug(bt.toString());
 		//sort trees from largest delta value to smallest delta
 		Collections.sort(currentForest.getTrees());
-//		System.out.println("");
+//		log.debug("");
 //		for(BinaryTree bt : currentForest.getTrees())
-//			System.out.println(bt.toString());
+//			log.debug(bt.toString());
+		
+		
 		
 		//remove treesfrom the bottom of the list
 		for(int i = 0; i < treesToKill; i++ ){
 			currentForest.getTrees().remove(populationSize-1-i);
 		} 
 
+		
+		
 		//add random list indexes to an array to determine which trees to crossover
 		for(int j = 0; j < crossoverTrees.length; j++){
 			randomTreeIndex = Randomizer.randomGen(0, currentForest.getTrees().size());
@@ -143,12 +155,15 @@ public class GP {
 			}
 		
 			crossoverTrees[j] = randomTreeIndex;
+			log.debug("Tree Indexes: " + crossoverTrees.toString());
 		}
+		
 		
 		//perform crossovers in pairs
 		for(int m = 0; m < crossoverTrees.length; m = m + 2){
 			crossover(currentForest.getTrees().get(m), currentForest.getTrees().get(m+1));
 		}
+		
 		
 		//add random list indexes to an array to determine which trees to mutate
 		for(int j = 0; j < mutateTrees.length; j++){
@@ -170,9 +185,11 @@ public class GP {
 			}
 		
 			mutateTrees[j] = randomTreeIndex;
-//			System.out.println("Mutate: " + randomTreeIndex);
+			log.debug("Mutate index: " + randomTreeIndex);
 		}		
 		
+		
+		//perform mutations
 		for(int p = 0; p < mutateTrees.length-1; p++){
 			mutate(currentForest.getTrees().get(p));
 		}
@@ -203,9 +220,9 @@ public class GP {
 			}
 
 			for (int j = 0; j < trainingData.length; j++) {
-				// System.out.println(trainingData[j]);
-				calc.setVariable("x", trainingData[j]);
-				// System.out.println(calc.calculate());
+				 log.debug("Training Data value: " + trainingData[j]);
+				calc.setVariable("x", trainingData[j]); 
+				log.debug("Caluclated Value: " + calc.calculate());
 				valuesSum += calc.calculate();
 			}
 
@@ -244,9 +261,9 @@ public class GP {
 		
 		//Assign each tree node to an ArrayList
 		tree1Nodes = createTreeArrayList(tree1, tree1Nodes);
-//		System.out.println("tree1Nodes size: " + tree1Nodes.size());
+		log.debug("tree1Nodes size: " + tree1Nodes.size());
 		tree2Nodes = createTreeArrayList(tree2, tree2Nodes);
-//		System.out.println("tree1Nodes size: " + tree2Nodes.size());
+		log.debug("tree1Nodes size: " + tree2Nodes.size());
 		
 		randDepth1 = Randomizer.randomGen(1, tree1Nodes.size()-1);
 		randDepth2 = Randomizer.randomGen(1, tree2Nodes.size()-1);
@@ -257,21 +274,21 @@ public class GP {
 		tree1CrossoverPart.setCrossover(true);
 		BinaryTree tree2CrossoverPart = tree2Nodes.get(randDepth2);
 		tree2CrossoverPart.setCrossover(true);
-		System.out.println("Crossover tree part 1");
-		System.out.println(tree1CrossoverPart.toString());
-		System.out.println("Crossover tree part 2");
-		System.out.println(tree2CrossoverPart.toString());
+		log.debug("Crossover tree part 1");
+		log.debug(tree1CrossoverPart.toString());
+		log.debug("Crossover tree part 2");
+		log.debug(tree2CrossoverPart.toString());
 
-		System.out.println("Trees before crossover: ");
-		System.out.println(tree1.toString());
-		System.out.println(tree2.toString());
+		log.debug("Trees before crossover: ");
+		log.debug(tree1.toString());
+		log.debug(tree2.toString());
 
 		doCrossover(tree1, tree2CrossoverPart);
 		doCrossover(tree2, tree1CrossoverPart);
 
-		System.out.println("Trees after crossover: ");
-		System.out.println(tree1.toString());
-		System.out.println(tree2.toString());
+		log.debug("Trees after crossover: ");
+		log.debug(tree1.toString());
+		log.debug(tree2.toString());
 	}
 	
 	/**
@@ -286,16 +303,16 @@ public class GP {
 		
 		treeNodes = createTreeArrayList(tree, treeNodes);
 		randDepth = Randomizer.randomGen(0, treeNodes.size()-1);
-//		System.out.println("Value to mutate: " + treeNodes.get(randDepth).getValue());
+//		log.debug("Value to mutate: " + treeNodes.get(randDepth).getValue());
 		if(treeNodes.get(randDepth).isOperator()){
 			newValue = Randomizer.randomOperator();
 		} else {
 			newValue = Randomizer.randomOperand();
 		}
-		System.out.println("Tree before/after mutation");
-		System.out.println(tree.toString());
+		log.debug("Tree before/after mutation");
+		log.debug(tree.toString());
 		treeNodes.get(randDepth).setValue(newValue);
-		System.out.println(tree.toString());
+		log.debug(tree.toString());
 	}
 	
 	/**
@@ -326,11 +343,11 @@ public class GP {
 			if (tree.getRightChild() != null && tree.getRightChild().isCrossover()) {				
 				tree.getRightChild().setCrossover(false);
 				tree.setRightChild(treeCrossoverPart);
-				System.out.println("Found crossover on right! " + tree.toString());
+				log.debug("Found crossover on right! " + tree.toString());
 			} else if(tree.getLeftChild() != null && tree.getLeftChild().isCrossover()){
 				tree.getLeftChild().setCrossover(false);
 				tree.setLeftChild(treeCrossoverPart);
-				System.out.println("Found crossover on left! " + tree.toString());
+				log.debug("Found crossover on left! " + tree.toString());
 			} else {
 					doCrossover(tree.getLeftChild(), treeCrossoverPart);
 					doCrossover(tree.getRightChild(), treeCrossoverPart);				
