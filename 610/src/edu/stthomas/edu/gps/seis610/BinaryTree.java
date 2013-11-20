@@ -22,7 +22,6 @@ public class BinaryTree implements Comparable<BinaryTree> {
     private boolean crossover;
     private int level;
     private int maxDepth;
-    private boolean match;
     private boolean operator;
     private boolean valid;
     private double delta;
@@ -285,14 +284,6 @@ public class BinaryTree implements Comparable<BinaryTree> {
         print(root.rightChild, indent + 1);
     }
 
-	public boolean isMatch() {
-		return match;
-	}
-
-	public void setMatch(boolean match) {
-		this.match = match;
-	}
-
 	public boolean isOperator() {
 		String value = (String) getValue();
 		if(value.equals("+") || value.equals("-") || value.equals("*") || value.equals("/")){
@@ -330,7 +321,7 @@ public class BinaryTree implements Comparable<BinaryTree> {
 
 	@Override
 	public int compareTo(BinaryTree tree1) {
-		if(tree1.getDelta() < getDelta()){
+		if(tree1.getDelta() > getDelta()){
 			return -1;
 		} else if(tree1.getDelta() == getDelta()){
 			return 0;

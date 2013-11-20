@@ -72,7 +72,7 @@ public class Forest {
 					buildTree(root.getLeftChild(), targetLevel, countLevel +1);
 					buildTree(root.getRightChild(), targetLevel, countLevel +1);
 				}  else {
-					//create either two operands or one operand and one operator
+					//create either two operators or one operand and one operator
 					int option = Randomizer.randomGen(0, 1);
 					if(option == 0){
 						//two operators

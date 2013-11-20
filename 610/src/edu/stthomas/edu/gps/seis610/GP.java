@@ -27,7 +27,7 @@ public class GP {
 
 		// readin Training Data from file
 		log.info("Reading Training Data");
-		int trainingData[] = new int[9];
+		int trainingData[] = new int[11];
 		String inputString;
 		int i = 0;
 		FileInputStream fstream;
@@ -48,8 +48,7 @@ public class GP {
 			e.printStackTrace();
 		}
 
-		double trainingDataYValueSum = Math.abs(calculateValues(null,
-				trainingData, Settings.getStringEquation()));
+		double trainingDataYValueSum = Math.abs(calculateValues(null, trainingData, Settings.getStringEquation()));
 
 		forest.setGeneration(1);
 		// iterate through generations
@@ -90,9 +89,6 @@ public class GP {
 	public static Forest evaluateForest(Forest currentForest,
 			int[] trainingData, double trainingDataYValueSum) {
 		
-		
-		double delta;
-		double treeSum;
 		int populationSize = Settings.getPopulationSize();
 		double treesToKill = Math.ceil(populationSize * (1-Settings.getPercentageOfTreesToSurvive()));
 		double treesToCrossover = Math.ceil(populationSize) * (Settings.getTreesToCrossover());
@@ -107,93 +103,84 @@ public class GP {
 			treesToCrossover++;
 		}
 		
-		// evaluate trees against training data
-		for (BinaryTree tree : currentForest.getTrees()) {
-			log.info(tree.toString());
-			treeSum = calculateValues(tree, trainingData, null);
-			log.info("Sum: " + treeSum);
-			if (Math.abs(treeSum) == trainingDataYValueSum) {
-				tree.setValid(true);
-				log.warn("Valid tree! " + tree.toString());
-				break;
-			} else {
-				delta = Math.abs(trainingDataYValueSum - treeSum);
-				tree.setDelta(delta);
-				log.info("Delta: " + delta);
-			}
-
-		}
+		//assign newly created trees a delta value and check validity. if no valid trees found, do crossover and mutation
+		if(!checkForestForValidTree(currentForest, trainingData, trainingDataYValueSum)){
 		
-//		log.debug("Tree before/after sort");
-//		for(BinaryTree bt : currentForest.getTrees())
-//			log.debug(bt.toString());
-		//sort trees from largest delta value to smallest delta
-		Collections.sort(currentForest.getTrees());
-//		log.debug("");
-//		for(BinaryTree bt : currentForest.getTrees())
-//			log.debug(bt.toString());
-		
-		
-		
-		//remove treesfrom the bottom of the list
-		for(int i = 0; i < treesToKill; i++ ){
-			currentForest.getTrees().remove(populationSize-1-i);
-		} 
-
-		
-		
-		//add random list indexes to an array to determine which trees to crossover
-		for(int j = 0; j < crossoverTrees.length; j++){
-			randomTreeIndex = Randomizer.randomGen(0, currentForest.getTrees().size());
+			log.info("Tree before/after sort");
+			for(BinaryTree bt : currentForest.getTrees())
+				log.info("" + bt.getDelta());
+			//sort trees from smallest delta value to largest delta
+			Collections.sort(currentForest.getTrees());
+			log.info("");
+			for(BinaryTree bt : currentForest.getTrees())
+				log.info("" + bt.getDelta());
 			
-			//make sure the index has not been selected already
-			for(int k = 0; k < crossoverTrees.length; k++){
-				if(randomTreeIndex == crossoverTrees[k]){
-					randomTreeIndex = Randomizer.randomGen(0, currentForest.getTrees().size());
-					k = 0;
+			
+			
+			//remove treesfrom the bottom of the list
+			for(int i = 0; i < treesToKill; i++ ){
+				currentForest.getTrees().remove(populationSize-1-i);
+			} 
+	
+			
+			
+			//add random list indexes to an array to determine which trees to crossover
+			for(int j = 0; j < crossoverTrees.length; j++){
+				randomTreeIndex = Randomizer.randomGen(0, currentForest.getTrees().size());
+				
+				//make sure the index has not been selected already
+				for(int k = 0; k < crossoverTrees.length; k++){
+					if(randomTreeIndex == crossoverTrees[k]){
+						randomTreeIndex = Randomizer.randomGen(0, currentForest.getTrees().size());
+						k = 0;
+					}
 				}
-			}
-		
-			crossoverTrees[j] = randomTreeIndex;
-			log.debug("Tree Indexes: " + crossoverTrees.toString());
-		}
-		
-		
-		//perform crossovers in pairs
-		for(int m = 0; m < crossoverTrees.length; m = m + 2){
-			crossover(currentForest.getTrees().get(m), currentForest.getTrees().get(m+1));
-		}
-		
-		
-		//add random list indexes to an array to determine which trees to mutate
-		for(int j = 0; j < mutateTrees.length; j++){
-			randomTreeIndex = Randomizer.randomGen(0, currentForest.getTrees().size());
 			
-			//make sure the index has not been selected already in either mutate index list or crossover index list
-			for(int k = 0; k < crossoverTrees.length; k++){
-				if(randomTreeIndex == crossoverTrees[k] ){
-					randomTreeIndex = Randomizer.randomGen(0, currentForest.getTrees().size());
-					k = 0;
-				} else {
-					for(int n = 0; n < mutateTrees.length; n++){
-						if(randomTreeIndex == mutateTrees[n]){
-							randomTreeIndex = Randomizer.randomGen(0, currentForest.getTrees().size());
-							n = 0;
+				crossoverTrees[j] = randomTreeIndex;
+				log.debug("Tree Indexes: " + crossoverTrees.toString());
+			}
+			
+			
+			//perform crossovers in pairs
+			for(int m = 0; m < crossoverTrees.length; m = m + 2){
+				crossover(currentForest.getTrees().get(m), currentForest.getTrees().get(m+1));
+			}
+			
+			
+			//add random list indexes to an array to determine which trees to mutate
+			for(int j = 0; j < mutateTrees.length; j++){
+				randomTreeIndex = Randomizer.randomGen(0, currentForest.getTrees().size());
+				
+				//make sure the index has not been selected already in either mutate index list or crossover index list
+				for(int k = 0; k < crossoverTrees.length; k++){
+					if(randomTreeIndex == crossoverTrees[k] ){
+						randomTreeIndex = Randomizer.randomGen(0, currentForest.getTrees().size());
+						k = 0;
+					} else {
+						for(int n = 0; n < mutateTrees.length; n++){
+							if(randomTreeIndex == mutateTrees[n]){
+								randomTreeIndex = Randomizer.randomGen(0, currentForest.getTrees().size());
+								n = 0;
+							}
 						}
 					}
 				}
+			
+				mutateTrees[j] = randomTreeIndex;
+				log.debug("Mutate index: " + randomTreeIndex);
+			}		
+			
+			
+			//perform mutations
+			for(int p = 0; p < mutateTrees.length-1; p++){
+				mutate(currentForest.getTrees().get(p));
 			}
-		
-			mutateTrees[j] = randomTreeIndex;
-			log.debug("Mutate index: " + randomTreeIndex);
-		}		
-		
-		
-		//perform mutations
-		for(int p = 0; p < mutateTrees.length-1; p++){
-			mutate(currentForest.getTrees().get(p));
+			
+			
+			//second check for validity, assigning crossover and mutated trees a new delta value
+			checkForestForValidTree(currentForest, trainingData, trainingDataYValueSum);
+			
 		}
-		
 
 		return currentForest;
 	}
@@ -279,16 +266,16 @@ public class GP {
 		log.debug("Crossover tree part 2");
 		log.debug(tree2CrossoverPart.toString());
 
-		log.debug("Trees before crossover: ");
-		log.debug(tree1.toString());
-		log.debug(tree2.toString());
+		log.info("Trees before crossover: ");
+		log.info(tree1.toString());
+		log.info(tree2.toString());
 
 		doCrossover(tree1, tree2CrossoverPart);
 		doCrossover(tree2, tree1CrossoverPart);
 
-		log.debug("Trees after crossover: ");
-		log.debug(tree1.toString());
-		log.debug(tree2.toString());
+		log.info("Trees after crossover: ");
+		log.info(tree1.toString());
+		log.info(tree2.toString());
 	}
 	
 	/**
@@ -309,10 +296,11 @@ public class GP {
 		} else {
 			newValue = Randomizer.randomOperand();
 		}
-		log.debug("Tree before/after mutation");
-		log.debug(tree.toString());
+		
+		log.info("Tree before/after mutation");
+		log.info(tree.toString());
 		treeNodes.get(randDepth).setValue(newValue);
-		log.debug(tree.toString());
+		log.info(tree.toString());
 	}
 	
 	/**
@@ -354,6 +342,29 @@ public class GP {
 			}
 		}
 
+	}
+	
+	public static boolean checkForestForValidTree(Forest forest, int[] trainingData, double trainingDataYValueSum){
+		double treeSum;
+		double delta; 
+		
+		// evaluate trees against training data
+		for (BinaryTree tree : forest.getTrees()) {
+			log.info(tree.toString());
+			treeSum = Math.abs(calculateValues(tree, trainingData, null));
+			log.info("Sum: " + treeSum);
+			if (treeSum == trainingDataYValueSum) {
+				tree.setValid(true);
+				log.warn("Valid tree! " + tree.toString());
+				return true;
+			} else {
+				delta = Math.abs(trainingDataYValueSum - treeSum);
+				tree.setDelta(delta);
+				log.info("Delta: " + delta);
+			}
+
+		}
+		return false;
 	}
 
 }
