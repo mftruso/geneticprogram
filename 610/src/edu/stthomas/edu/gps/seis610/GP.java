@@ -27,7 +27,7 @@ public class GP {
 
 		// readin Training Data from file
 		log.info("Reading Training Data");
-		int trainingData[] = new int[11];
+		int trainingData[] = new int[15];
 		String inputString;
 		int i = 0;
 		FileInputStream fstream;
@@ -350,15 +350,15 @@ public class GP {
 		
 		// evaluate trees against training data
 		for (BinaryTree tree : forest.getTrees()) {
-			log.info(tree.toString());
 			treeSum = Math.abs(calculateValues(tree, trainingData, null));
 			log.info("Sum: " + treeSum);
 			if (treeSum == trainingDataYValueSum) {
 				tree.setValid(true);
-				log.warn("Valid tree! " + tree.toString());
+				log.warn("Valid tree sum: " + treeSum + " " + tree.toString());
 				return true;
 			} else {
 				delta = Math.abs(trainingDataYValueSum - treeSum);
+				tree.setValid(false);
 				tree.setDelta(delta);
 				log.info("Delta: " + delta);
 			}

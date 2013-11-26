@@ -11,10 +11,10 @@ public class Settings {
 
 	public Settings(){
 		maxTreeHeight = 20;
-		populationSize = 20;
-		treesToCrossover = 0.4;
+		populationSize = 1000;
+		treesToCrossover = 0.5;
 		treesToMutate = 0.2;
-		setPercentageOfTreesToSurvive(0.8);
+		setPercentageOfTreesToSurvive(0.7);
 		setStringEquation("(((x*x)-1)/2)");
 	}
 
