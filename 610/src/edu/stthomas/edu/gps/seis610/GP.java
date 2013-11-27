@@ -106,14 +106,14 @@ public class GP {
 		//assign newly created trees a delta value and check validity. if no valid trees found, do crossover and mutation
 		if(!checkForestForValidTree(currentForest, trainingData, trainingDataYValueSum)){
 		
-			log.info("Tree before/after sort");
-			for(BinaryTree bt : currentForest.getTrees())
-				log.info("" + bt.getDelta());
+//			log.info("Tree before/after sort");
+//			for(BinaryTree bt : currentForest.getTrees())
+//				log.info("" + bt.getDelta());
 			//sort trees from smallest delta value to largest delta
 			Collections.sort(currentForest.getTrees());
-			log.info("");
-			for(BinaryTree bt : currentForest.getTrees())
-				log.info("" + bt.getDelta());
+			log.info("Smallest delta: " + currentForest.getTrees().get(0).getDelta());
+//			for(BinaryTree bt : currentForest.getTrees())
+//				log.info("" + bt.getDelta());
 			
 			
 			
@@ -266,16 +266,16 @@ public class GP {
 		log.debug("Crossover tree part 2");
 		log.debug(tree2CrossoverPart.toString());
 
-		log.info("Trees before crossover: ");
-		log.info(tree1.toString());
-		log.info(tree2.toString());
+		log.debug("Trees before crossover: ");
+		log.debug(tree1.toString());
+		log.debug(tree2.toString());
 
 		doCrossover(tree1, tree2CrossoverPart);
 		doCrossover(tree2, tree1CrossoverPart);
 
-		log.info("Trees after crossover: ");
-		log.info(tree1.toString());
-		log.info(tree2.toString());
+		log.debug("Trees after crossover: ");
+		log.debug(tree1.toString());
+		log.debug(tree2.toString());
 	}
 	
 	/**
@@ -297,10 +297,10 @@ public class GP {
 			newValue = Randomizer.randomOperand();
 		}
 		
-		log.info("Tree before/after mutation");
-		log.info(tree.toString());
+		log.debug("Tree before/after mutation");
+		log.debug(tree.toString());
 		treeNodes.get(randDepth).setValue(newValue);
-		log.info(tree.toString());
+		log.debug(tree.toString());
 	}
 	
 	/**
@@ -351,7 +351,7 @@ public class GP {
 		// evaluate trees against training data
 		for (BinaryTree tree : forest.getTrees()) {
 			treeSum = Math.abs(calculateValues(tree, trainingData, null));
-			log.info("Sum: " + treeSum);
+			log.debug("Sum: " + treeSum);
 			if (treeSum == trainingDataYValueSum) {
 				tree.setValid(true);
 				log.warn("Valid tree sum: " + treeSum + " " + tree.toString());
@@ -360,7 +360,7 @@ public class GP {
 				delta = Math.abs(trainingDataYValueSum - treeSum);
 				tree.setValid(false);
 				tree.setDelta(delta);
-				log.info("Delta: " + delta);
+				log.debug("Delta: " + delta);
 			}
 
 		}
