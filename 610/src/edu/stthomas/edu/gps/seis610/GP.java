@@ -112,6 +112,7 @@ public class GP {
 			//sort trees from smallest delta value to largest delta
 			Collections.sort(currentForest.getTrees());
 			log.info("Smallest delta: " + currentForest.getTrees().get(0).getDelta());
+			log.info(currentForest.getTrees().get(0).toString());
 //			for(BinaryTree bt : currentForest.getTrees())
 //				log.info("" + bt.getDelta());
 			
