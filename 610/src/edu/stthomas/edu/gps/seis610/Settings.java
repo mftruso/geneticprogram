@@ -10,12 +10,12 @@ public class Settings {
 	private static String stringEquation;
 
 	public Settings(){
-		maxTreeHeight = 20;
-		populationSize = 100;
-		treesToCrossover = 0.4;
+		maxTreeHeight = 7;
+		populationSize = 10000;
+		treesToCrossover = 0.3;
 		treesToMutate = 0.1;
-		setPercentageOfTreesToSurvive(0.7);
-		setStringEquation("(((x*x)-1)/2)");
+		setPercentageOfTreesToSurvive(0.6);
+		setStringEquation("((-3*(x*x)+7)/2)");
 	}
 
 	public static int getMaxTreeHeight() {
