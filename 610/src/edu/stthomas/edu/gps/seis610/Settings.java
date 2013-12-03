@@ -10,9 +10,9 @@ public class Settings {
 	private static String stringEquation;
 
 	public Settings(){
-		maxTreeHeight = 7;
-		populationSize = 10000;
-		treesToCrossover = 0.3;
+		maxTreeHeight = 9;
+		populationSize = 3000;
+		treesToCrossover = 0.4;
 		treesToMutate = 0.1;
 		setPercentageOfTreesToSurvive(0.6);
 		setStringEquation("((-3*(x*x)+7)/2)");
@@ -22,6 +22,7 @@ public class Settings {
 		return maxTreeHeight;
 	}
 
+	@SuppressWarnings("static-access")
 	public void setMaxTreeHeight(int maxTreeHeight) {
 		this.maxTreeHeight = maxTreeHeight;
 	}
@@ -30,6 +31,7 @@ public class Settings {
 		return populationSize;
 	}
 
+	@SuppressWarnings("static-access")
 	public void setPopulationSize(int populationSize) {
 		this.populationSize = populationSize;
 	}
@@ -38,6 +40,7 @@ public class Settings {
 		return treesToCrossover;
 	}
 
+	@SuppressWarnings("static-access")
 	public void setTreesToCrossover(double treesToCrossover) {
 		this.treesToCrossover = treesToCrossover;
 	}
@@ -46,6 +49,7 @@ public class Settings {
 		return treesToMutate;
 	}
 
+	@SuppressWarnings("static-access")
 	public void setTreesToMutate(double treesToMutate) {
 		this.treesToMutate = treesToMutate;
 	}

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 
 import de.congrace.exp4j.*;
@@ -32,9 +34,11 @@ public class GP {
 		int i = 0;
 		FileInputStream fstream;
 		try {
-			fstream = new FileInputStream("TrainingData.txt");
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					fstream));
+//			fstream = new FileInputStream("resource/TrainingData.txt");
+			InputStream inputStream = 
+				    GP.class.getClassLoader().getResourceAsStream("TrainingData.txt");
+//			BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+			BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 			while ((inputString = br.readLine()) != null) {
 				trainingData[i] = Integer.parseInt(inputString);
 				i++;

@@ -25,6 +25,7 @@ public class Forest {
 		this.generation = generation;
 	}
 	
+	@SuppressWarnings("static-access")
 	public void initialize(Settings settings){
 		int treeDepth;
 		
