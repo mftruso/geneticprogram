@@ -12,9 +12,9 @@ public class Settings {
 	public Settings(){
 		maxTreeHeight = 9;
 		populationSize = 3000;
-		treesToCrossover = 0.4;
+		treesToCrossover = 0.3;
 		treesToMutate = 0.1;
-		setPercentageOfTreesToSurvive(0.6);
+		setPercentageOfTreesToSurvive(0.5);
 		setStringEquation("((-3*(x*x)+7)/2)");
 	}
 

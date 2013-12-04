@@ -18,21 +18,13 @@ public class BinaryTree implements Comparable<BinaryTree> {
     public Object value;
     private BinaryTree leftChild;
     private BinaryTree rightChild;
-    private boolean mutate;
+    private BinaryTree parent;
     private boolean crossover;
-    private int level;
     private int maxDepth;
     private boolean operator;
     private boolean valid;
     private double delta;
 
-    public boolean isMutate() {
-		return mutate;
-	}
-
-	public void setMutate(boolean mutate) {
-		this.mutate = mutate;
-	}
 
 	public boolean isCrossover() {
 		return crossover;
@@ -40,14 +32,6 @@ public class BinaryTree implements Comparable<BinaryTree> {
 
 	public void setCrossover(boolean crossover) {
 		this.crossover = crossover;
-	}
-
-	public int getLevel() {
-		return level;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
 	}
 
 	public int getMaxDepth() {
@@ -122,6 +106,7 @@ public class BinaryTree implements Comparable<BinaryTree> {
         if (contains(subtree, this)) {
             throw new IllegalArgumentException(
                 "Subtree " + this +" already contains " + subtree);
+//        	System.out.println("already contains " + subtree);
         }
         leftChild = subtree;
     }
@@ -140,11 +125,20 @@ public class BinaryTree implements Comparable<BinaryTree> {
         if (contains(subtree, this)) {
             throw new IllegalArgumentException(
                     "Subtree " + this +" already contains " + subtree);
+//        	System.out.println("already contains " + subtree);
         }
         rightChild = subtree;
     }
 
-    /**
+    public BinaryTree getParent() {
+		return parent;
+	}
+
+	public void setParent(BinaryTree parent) {
+		this.parent = parent;
+	}
+
+	/**
      * Sets the value in this BinaryTree node.
      * 
      * @param value The new value.

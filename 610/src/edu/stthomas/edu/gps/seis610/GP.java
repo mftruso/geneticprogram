@@ -135,14 +135,17 @@ public class GP {
 				
 				//make sure the index has not been selected already
 				for(int k = 0; k < crossoverTrees.length; k++){
-					if(randomTreeIndex == crossoverTrees[k]){
+					log.debug("randomIndex: " + randomTreeIndex);
+					log.debug("value at crossoverTrees["+k+"] " + crossoverTrees[k]);
+					if(randomTreeIndex == (int)crossoverTrees[k]){
 						randomTreeIndex = Randomizer.randomGen(0, currentForest.getTrees().size());
-						k = 0;
+						k = -1;
 					}
+					
 				}
 			
 				crossoverTrees[j] = randomTreeIndex;
-				log.debug("Tree Indexes: " + crossoverTrees.toString());
+				log.debug("Crossover Indexes: " + crossoverTrees[j]);
 			}
 			
 			
@@ -160,12 +163,12 @@ public class GP {
 				for(int k = 0; k < crossoverTrees.length; k++){
 					if(randomTreeIndex == crossoverTrees[k] ){
 						randomTreeIndex = Randomizer.randomGen(0, currentForest.getTrees().size());
-						k = 0;
+						k = -1;
 					} else {
 						for(int n = 0; n < mutateTrees.length; n++){
 							if(randomTreeIndex == mutateTrees[n]){
 								randomTreeIndex = Randomizer.randomGen(0, currentForest.getTrees().size());
-								n = 0;
+								n = -1;
 							}
 						}
 					}
@@ -270,11 +273,25 @@ public class GP {
 		log.debug(tree1CrossoverPart.toString());
 		log.debug("Crossover tree part 2");
 		log.debug(tree2CrossoverPart.toString());
-
+		
 		log.debug("Trees before crossover: ");
 		log.debug(tree1.toString());
 		log.debug(tree2.toString());
-
+		
+//		if(tree1CrossoverPart.getParent().getRightChild().equals(tree1CrossoverPart)){
+//			tree1CrossoverPart.getParent().setRightChild(tree2CrossoverPart);
+//		} else {
+//			tree1CrossoverPart.getParent().setLeftChild(tree2CrossoverPart);
+//		}
+//		
+//		if(tree2CrossoverPart.getParent().getRightChild().equals(tree2CrossoverPart)){
+//			tree2CrossoverPart.getParent().setRightChild(tree1CrossoverPart);
+//		} else {
+//			tree2CrossoverPart.getParent().setLeftChild(tree1CrossoverPart);
+//		}
+//		
+//		tree1CrossoverPart.setParent(parent2);
+//		tree2CrossoverPart.setParent(parent1);
 		doCrossover(tree1, tree2CrossoverPart);
 		doCrossover(tree2, tree1CrossoverPart);
 

@@ -47,7 +47,13 @@ public class Randomizer {
 	
 	public static String randomOperand(){
 		int num = randomGen(0,10);
-		if(num == 10) {
+		int posNeg = randomGen(0,1);
+		
+		if(posNeg==1){
+			num = num*(-1);
+		}
+		
+		if(num == 10 || num == -10) {
 			return "x";
 		} else {
 			return num+"";
